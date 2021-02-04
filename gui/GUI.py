@@ -3,15 +3,16 @@ from tkinter import filedialog
 
 """
 class to manage gui the gui
+
 """
 class GUI():
-     
-    label_list = []
+    #Termporär zum testen 
+    label_set = set()
      
     def __init__(self):
         self.root = Tk()
-        self.frame = Frame(self.root)
-        self.frame.pack(side="top", expand=True, fill="both")
+        self.base_frame = Frame(self.root)
+        self.base_frame.pack(side="top", expand=True, fill="both")
        
     """
     Build first gui instance
@@ -29,17 +30,14 @@ class GUI():
     def update(self):
         self.clearFrame()
         self.setFixedFrameObjects()
-        
-        #label
-        for i,l in enumerate(self.label_list):
-            label = Label(self.frame,text=l)
-            label.grid(row=i+1,column=0)
-       
+        self.setDynamicFrameObjects()
+
+           
     """
     clear whole frame for next update iteration
     """        
     def clearFrame(self):
-        for element in self.frame.winfo_children():
+        for element in self.base_frame.winfo_children():
             element.destroy()  
          
          
@@ -47,7 +45,12 @@ class GUI():
     method to set fixed objects in frame 
     """   
     def setFixedFrameObjects(self):
-        button = Button(self.frame, text="Add Files", command = self.browseFiles)
+        actions_frame = Frame(self.base_frame)
+        actions_frame.grid(row=0,column=1)
+        
+        
+        
+        button = Button(actions_frame, text="Add Files", command = self.browseFiles)
         button.grid(row=0,column=0)   
         
       
@@ -55,16 +58,25 @@ class GUI():
     method to set dynamic objects in frame
     """     
     def setDynamicFrameObjects(self):
-        pass 
+        
+        #Termporär zum testen
+
+        label_Frame = Frame(self.base_frame, bg="black")
+        label_Frame.grid(row=0,column=0)
+        
+        for i,l in enumerate(self.label_set):
+            label = Label(label_Frame,text=l)
+            label.grid(row=i+1,column=0)
         
         
     """
     method to ope file browser to add file to gui
     """          
     def browseFiles(self):
-        path = filedialog.askopenfilename(initialdir = "/home", 
+        path = filedialog.askopenfilenames(initialdir = "/home", 
                                           title = "Select a File", 
                                           filetypes = (("PDF files", 
                                                         "*.pdf*"),))
-        self.label_list.append(path)
+        #Termporär zum testen
+        self.label_set =  self.label_set.union(set(path))
         self.update()
