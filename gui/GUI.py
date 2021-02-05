@@ -80,7 +80,7 @@ class GUI():
             element.destroy()  
        
     """
-    method to ope file browser to add file to gui
+    method to open file browser to add file to gui
     """          
     def browseFiles(self):
         path = filedialog.askopenfilenames(initialdir = "/home", title = "Select a File", filetypes = (("PDF files",  "*.pdf*"),))
@@ -88,6 +88,12 @@ class GUI():
         self.list_of_pdf =  sorted(set(self.list_of_pdf).union(files_to_add))     
         self.update()
     
+    
+    """
+    method to set path to save file to
+    """
+    def setPath(self):
+        self.selected_path = filedialog.askdirectory()
     
     
     """
@@ -110,13 +116,19 @@ class GUI():
             
                 if value in self.selected_files:
                     self.selected_files.remove(value)
+                    #Remove item if uses dont want to merge the file anymore
                     self.mergeBox.delete(self.mergeBox.get(0,END).index(value))
                 else:
                     self.selected_files.append(value)
+                    #Add file to view 
                     self.mergeBox.insert(END,value)
-                
-
+   
+   
+    """
+    Open a merge view to select pdf files to merge
+    """    
     def openMergeView(self):
+        self.update()
         self.box.bind('<<ListboxSelect>>', self.addSelected)
         self.box.select_clear(0,END)
         
@@ -128,12 +140,23 @@ class GUI():
         self.mergeBox.grid(row=1,column=1,sticky='nsew')
 
 
-        button_frame = Frame(self.root)
-        button_frame.grid(row=1,column=2,sticky='nsew')
-        button_merge = Button(button_frame, text="Merge files", command = self.mergeFiles)
-        button_merge.grid(row=0,column=0,sticky='new')
-        button_close = Button(button_frame, text="close", command = self.update)
-        button_close.grid(row=1,column=0,sticky='new')
+        action_frame = Frame(self.root)
+        action_frame.grid(row=1,column=2,sticky='nsew')
+
+        label_text = Label(action_frame, text="File name")
+        label_text.grid(row=0,column=0, sticky='new')
+        
+        self.file_name_input = Entry(action_frame)
+        self.file_name_input.grid(row=1,column=0, sticky='new')
+        
+        button_set_Path = Button(action_frame, text="Set path", command = self.setPath)
+        button_set_Path.grid(row=2,column=0,sticky='new')
+        
+        
+        button_merge = Button(action_frame, text="Merge files", command = self.mergeFiles)
+        button_merge.grid(row=3,column=0,sticky='new')
+        button_close = Button(action_frame, text="close", command = self.update)
+        button_close.grid(row=4,column=0,sticky='new')
         
         
     """
@@ -141,9 +164,12 @@ class GUI():
     """   
     def mergeFiles(self):    
         if len(self.selected_files) > 1: 
-            self.presenter.mergeFiles(self.selected_files)
+            filename = self.file_name_input.get()
+            path = self.selected_path
+            self.presenter.mergeFiles(self.selected_files,filename,path)
         else:
             print("To merge files select more than one file")
+    
     
     
     
