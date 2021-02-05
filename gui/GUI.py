@@ -22,6 +22,9 @@ class GUI():
         self.update()            
         self.root.geometry(size)
         self.root.minsize(height,width)  #TODO: Implement resize
+        self.root.columnconfigure(0,weight=1)
+        self.root.columnconfigure(1,weight=1)
+        self.root.rowconfigure(1,weight=2)
         self.root.title(title)
         self.root.mainloop()
     
@@ -33,14 +36,17 @@ class GUI():
         self.setDynamicFrameObjects()
         self.setFixedFrameObjects()
 
-      
+       
     """
     method to set dynamic objects in frame
     """     
-    def setDynamicFrameObjects(self):       
+    def setDynamicFrameObjects(self):    
+        label_listbox = Label(self.root,text='Imported files')   
+        label_listbox.grid(row=0,column=0,sticky='nsew')
+        
         self.box = Listbox(self.root, selectmode='multiple')
-        self.box.pack(expand=True,side=LEFT,fill=BOTH)
-        self.box.bind('<<ListboxSelect>>',self.addSelected)
+        self.box.grid(row=1,column=0,sticky='nsew')
+        self.box.unbind('<<ListboxSelect>>')
     
         for i,content in enumerate(self.list_of_pdf):
             self.box.insert(i,content) 
@@ -50,15 +56,20 @@ class GUI():
     method to set fixed objects in frame 
     """   
     def setFixedFrameObjects(self):  
-
-        button_add_files = Button(self.root, text="Add files", command = self.browseFiles)
-        button_add_files.pack(fill=X)
-       
-        button_merge_files = Button(self.root, text="Merge files", command = self.mergeFiles)
-        button_merge_files.pack(fill=X)
+        menubar = Menu(self.root)
+        files = Menu(menubar,tearoff=0)
+        files.add_command(label='Add files', command=self.browseFiles)
         
-        self.selected_Items_Label = Label(self.root,text="Selected items")
-        self.selected_Items_Label.pack(fill=X)
+        edit_on_files = Menu(menubar,tearoff=0)
+        edit_on_files.add_command(label='Merge files', command=self.openMergeView)
+        
+        menubar.add_cascade(menu=files, label='File')
+        menubar.add_cascade(menu=edit_on_files,label='Edit')
+        
+        self.root.config(menu=menubar)
+        
+
+        
         
         
     """
@@ -85,24 +96,46 @@ class GUI():
     lastSelectionList = []
     def addSelected(self,event): 
             w = event.widget
-            if self.lastSelectionList:
-                changedSelection = set(self.lastSelectionList).symmetric_difference(set(w.curselection()))
-                self.lastSelectionList = w.curselection()
-            else:
-                self.lastSelectionList = w.curselection()
-                changedSelection = w.curselection()
+            if w.size() > 0:
+                if self.lastSelectionList:
+                    changedSelection = set(self.lastSelectionList).symmetric_difference(set(w.curselection()))
+                    self.lastSelectionList = w.curselection()
+                else:
+                    self.lastSelectionList = w.curselection()
+                    changedSelection = w.curselection()
+                
             
-        
-            index = int(list(changedSelection)[0])
-            value = w.get(index)
-        
-            if value in self.selected_files:
-                self.selected_files.remove(value)
-            else:
-                self.selected_files.append(value)
-            print("Selected items", self.selected_files)
-            self.selected_Items_Label['text'] = "\n".join(self.selected_files)
+                index = int(list(changedSelection)[0])
+                value = w.get(index)
+            
+                if value in self.selected_files:
+                    self.selected_files.remove(value)
+                    self.mergeBox.delete(self.mergeBox.get(0,END).index(value))
+                else:
+                    self.selected_files.append(value)
+                    self.mergeBox.insert(END,value)
+                
 
+    def openMergeView(self):
+        self.box.bind('<<ListboxSelect>>', self.addSelected)
+        self.box.select_clear(0,END)
+        
+        
+        label = Label(self.root,text="Files to merge")
+        label.grid(row=0,column=1,sticky='nsew')
+        
+        self.mergeBox = Listbox(self.root,selectmode='single')
+        self.mergeBox.grid(row=1,column=1,sticky='nsew')
+
+
+        button_frame = Frame(self.root)
+        button_frame.grid(row=1,column=2,sticky='nsew')
+        button_merge = Button(button_frame, text="Merge files", command = self.mergeFiles)
+        button_merge.grid(row=0,column=0,sticky='new')
+        button_close = Button(button_frame, text="close", command = self.update)
+        button_close.grid(row=1,column=0,sticky='new')
+        
+        
     """
     merge selected files from view 
     """   

@@ -8,5 +8,6 @@ class PDFModifier:
     
     
     def merge(self,files):
-        print(files)
+        pass
+        #print(files)
         
