@@ -6,14 +6,13 @@ from gui.Presenter import Presenter
 class to manage gui the gui
 """
 class GUI():
-    #Termporär zum testen 
     list_of_pdf = set()
     selected_files = []
      
     def __init__(self):
         self.root = Tk()
         self.presenter= Presenter()
-       
+            
     """
     Build first gui instance
     """       
@@ -21,7 +20,7 @@ class GUI():
         size = str(height) + "x" + str(width)    
         self.update()            
         self.root.geometry(size)
-        self.root.minsize(height,width)  #TODO: Implement resize
+        self.root.minsize(height,width)  
         self.root.columnconfigure(0,weight=1)
         self.root.columnconfigure(1,weight=1)
         self.root.rowconfigure(1,weight=2)
