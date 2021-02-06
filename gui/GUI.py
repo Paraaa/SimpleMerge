@@ -91,9 +91,12 @@ class GUI():
     """
     method to set path to save file to
     """
-    def setPath(self):
-        self.selected_path = filedialog.askdirectory()
-    
+    def saveAs(self):
+        selected_path = filedialog.asksaveasfile(mode='w',defaultextension=".pdf").name
+        if selected_path is None:
+            return
+        self.mergeFiles(selected_path)
+        
     
     """
     add selected item to list from listbox
@@ -142,17 +145,8 @@ class GUI():
         action_frame = Frame(self.root)
         action_frame.grid(row=1,column=2,sticky='nsew')
 
-        label_text = Label(action_frame, text="File name")
-        label_text.grid(row=0,column=0, sticky='new')
-        
-        self.file_name_input = Entry(action_frame)
-        self.file_name_input.grid(row=1,column=0, sticky='new')
-        
-        button_set_Path = Button(action_frame, text="Set path", command = self.setPath)
-        button_set_Path.grid(row=2,column=0,sticky='new')
-        
-        
-        button_merge = Button(action_frame, text="Merge files", command = self.mergeFiles)
+              
+        button_merge = Button(action_frame, text="Save as", command = self.saveAs)
         button_merge.grid(row=3,column=0,sticky='new')
         button_close = Button(action_frame, text="close", command = self.update)
         button_close.grid(row=4,column=0,sticky='new')
@@ -161,11 +155,9 @@ class GUI():
     """
     merge selected files from view 
     """   
-    def mergeFiles(self):    
+    def mergeFiles(self,path):    
         if len(self.selected_files) > 1: 
-            filename = self.file_name_input.get()
-            path = self.selected_path
-            self.presenter.mergeFiles(self.selected_files,filename,path)
+            self.presenter.mergeFiles(self.selected_files,path)
         else:
             print("To merge files select more than one file")
     

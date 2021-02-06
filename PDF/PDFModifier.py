@@ -10,16 +10,15 @@ class PDFModifier:
         pass
 
     
-    def merge(self,files,filename,path=expanduser("~")):
+    def merge(self,files,path):
         merger = PdfFileMerger()
         
         for pdf_file_path in files:
             pdf_file = open(pdf_file_path,"rb")
             pdf = PdfFileReader(pdf_file)
             merger.append(pdf)
-            
-
-        merger.write(path + "/" + self.checkFileName(filename))
+    
+        merger.write(path)
    
        
     def checkFileName(self,filename):

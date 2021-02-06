@@ -31,12 +31,12 @@ class Presenter:
     """
     call PDFModifier to set merge requested files
     """
-    def mergeFiles(self,files_to_merge,filename,path_to_save_to):       
+    def mergeFiles(self,files_to_merge,path):       
         paths_of_files = [] 
         for file in files_to_merge:
             paths_of_files.append(self.file_to_path_dict.get(file))
       
-        self.pdfModifier.merge(paths_of_files,filename,path=path_to_save_to)
+        self.pdfModifier.merge(paths_of_files,path)
         
         
     
