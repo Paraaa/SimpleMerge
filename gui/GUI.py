@@ -90,13 +90,32 @@ class GUI():
     
     """
     method to set path to save file to
+    TODO: So schreiben, dass andere funktionen diese Methode auch nutzen können
     """
     def saveAs(self):
         selected_path = filedialog.asksaveasfile(mode='w',defaultextension=".pdf").name
         if selected_path is None:
             return
         self.mergeFiles(selected_path)
+      
+      
+    
+    """
+    select all items in the added items list
+    """
+    def selectAll(self):
+        for i in range(self.box.size()):
+            self.box.activate(i)
+            self.mergeBox.insert(END,self.box.get(i))
+        self.selected_files = list(self.list_of_pdf)
+
         
+    
+    """
+    deselect all items in the added items list
+    """
+    def deselectAll(self):
+        pass
     
     """
     add selected item to list from listbox
@@ -144,14 +163,20 @@ class GUI():
 
         action_frame = Frame(self.root)
         action_frame.grid(row=1,column=2,sticky='nsew')
-
-              
+             
         button_merge = Button(action_frame, text="Save as", command = self.saveAs)
-        button_merge.grid(row=3,column=0,sticky='new')
-        button_close = Button(action_frame, text="close", command = self.update)
-        button_close.grid(row=4,column=0,sticky='new')
+        button_merge.grid(row=2,column=0,sticky='new')
+    
+        button_select_all = Button(action_frame, text="Select all", command = self.selectAll)
+        button_select_all.grid(row=4,column=0,sticky='new')
         
+        button_select_all = Button(action_frame, text="Deselect all", command = self.saveAs)
+        button_select_all.grid(row=5,column=0,sticky='new')
+                
+        button_close = Button(action_frame, text="Close", command = self.update)
+        button_close.grid(row=6,column=0,sticky='new')
         
+
     """
     merge selected files from view 
     """   
