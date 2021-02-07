@@ -6,13 +6,16 @@ from gui.Presenter import Presenter
 class to manage gui the gui
 """
 class GUI():
-    list_of_pdf = set()
-    selected_files = []
-    
-     
+    """
+    construct
+    """ 
     def __init__(self):
         self.root = Tk()
         self.presenter= Presenter()
+        self.mergeBox = None
+        self.box = None
+        self.list_of_pdf = set()
+        self.selected_files = []
             
     """
     Build first gui instance
@@ -67,10 +70,6 @@ class GUI():
         menubar.add_cascade(menu=edit_on_files,label='Edit')
         
         self.root.config(menu=menubar)
-        
-
-        
-        
         
     """
     clear whole frame for next update iteration
