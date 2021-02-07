@@ -1,5 +1,5 @@
 from tkinter import * 
-from tkinter import filedialog
+from tkinter import filedialog,messagebox
 from gui.Presenter import Presenter
 
 """
@@ -8,6 +8,7 @@ class to manage gui the gui
 class GUI():
     list_of_pdf = set()
     selected_files = []
+    
      
     def __init__(self):
         self.root = Tk()
@@ -77,7 +78,10 @@ class GUI():
     def clearFrame(self):
         for element in self.root.winfo_children():
             element.destroy()  
-       
+        self.lastSelectionList =  []
+        self.selected_files = []
+        
+        
     """
     method to open file browser to add file to gui
     """          
@@ -93,21 +97,24 @@ class GUI():
     TODO: So schreiben, dass andere funktionen diese Methode auch nutzen können
     """
     def saveAs(self):
-        selected_path = filedialog.asksaveasfile(mode='w',defaultextension=".pdf").name
-        if selected_path is None:
-            return
-        self.mergeFiles(selected_path)
-      
+        if len(self.selected_files) > 1: 
+            selected_path = filedialog.asksaveasfile(mode='w',defaultextension=".pdf").name
+            if selected_path is None:
+                return
+            self.mergeFiles(selected_path)
+        else:
+            messagebox.showinfo(title=None,message="You need atleast two files to merge files.")
       
     
     """
     select all items in the added items list
     """
     def selectAll(self):
-        for i in range(self.box.size()):
-            self.box.activate(i)
-            self.mergeBox.insert(END,self.box.get(i))
         self.selected_files = list(self.list_of_pdf)
+        self.mergeBox.delete(0,END)
+        for item in self.selected_files:
+            self.mergeBox.insert(END,item)
+        self.box.select_set(0,END)
 
         
     
@@ -115,8 +122,10 @@ class GUI():
     deselect all items in the added items list
     """
     def deselectAll(self):
-        pass
-    
+        self.selected_files = []
+        self.mergeBox.delete(0,END)
+        self.box.selection_clear(0,END)
+   
     """
     add selected item to list from listbox
     """
@@ -153,13 +162,11 @@ class GUI():
         self.box.bind('<<ListboxSelect>>', self.addSelected)
         self.box.select_clear(0,END)
         
-        
         label = Label(self.root,text="Files to merge")
         label.grid(row=0,column=1,sticky='nsew')
         
         self.mergeBox = Listbox(self.root,selectmode='single')
         self.mergeBox.grid(row=1,column=1,sticky='nsew')
-
 
         action_frame = Frame(self.root)
         action_frame.grid(row=1,column=2,sticky='nsew')
@@ -170,7 +177,7 @@ class GUI():
         button_select_all = Button(action_frame, text="Select all", command = self.selectAll)
         button_select_all.grid(row=4,column=0,sticky='new')
         
-        button_select_all = Button(action_frame, text="Deselect all", command = self.saveAs)
+        button_select_all = Button(action_frame, text="Deselect all", command = self.deselectAll)
         button_select_all.grid(row=5,column=0,sticky='new')
                 
         button_close = Button(action_frame, text="Close", command = self.update)
@@ -181,10 +188,7 @@ class GUI():
     merge selected files from view 
     """   
     def mergeFiles(self,path):    
-        if len(self.selected_files) > 1: 
-            self.presenter.mergeFiles(self.selected_files,path)
-        else:
-            print("To merge files select more than one file")
+        self.presenter.mergeFiles(self.selected_files,path)
     
     
     
