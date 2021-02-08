@@ -65,6 +65,7 @@ class GUI():
         
         edit_on_files = Menu(menubar,tearoff=0)
         edit_on_files.add_command(label='Merge files', command=self.openMergeView)
+        self.openMergeView()
         
         menubar.add_cascade(menu=files, label='File')
         menubar.add_cascade(menu=edit_on_files,label='Edit')
@@ -157,7 +158,7 @@ class GUI():
     Open a merge view to select pdf files to merge
     """    
     def openMergeView(self):
-        self.update()
+        #self.update()
         self.box.bind('<<ListboxSelect>>', self.addSelected)
         self.box.select_clear(0,END)
         
