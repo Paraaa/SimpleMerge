@@ -14,7 +14,7 @@ pygame==1.9.6
 pylint==2.6.0
 PyMuPDF==1.18.8
 pyparsing==2.4.7
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 python-dateutil==2.8.1
 sge==1.7
 six==1.15.0
