@@ -1,23 +1,20 @@
 
-import re
-from os.path import expanduser
-from PyPDF2 import PdfFileMerger,PdfFileReader,PdfFileWriter
+from PyPDF2 import PdfFileMerger, PdfFileReader
 
 
-class PDFModifier:
-    
+class PDF:
+
     def __init__(self):
         pass
 
     """
     merge files with PyPDF2 and write it to destination location
     """
-    def merge(self,files,path):
+
+    def merge(self, files, path):
         merger = PdfFileMerger()
         for pdf_file_path in files:
-            pdf_file = open(pdf_file_path,"rb")
+            pdf_file = open(pdf_file_path, "rb")
             pdf = PdfFileReader(pdf_file)
             merger.append(pdf)
         merger.write(path)
-   
-       
