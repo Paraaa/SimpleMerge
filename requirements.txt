@@ -12,15 +12,9 @@ PyMuPDF==1.18.8
 pyparsing==2.4.7
 PyPDF2==1.27.5
 python-dateutil==2.8.1
-sge==1.7
 six==1.15.0
 tkPDFViewer==0.1
 toml==0.10.2
 ttkthemes==3.2.0
 uniseg==0.7.1
 wrapt==1.12.1
-xsge-gui==1.2.1
-xsge-lighting==1.0.2
-xsge-path==1.0.2
-xsge-physics==0.13.2
-xsge-tiled==1.0
